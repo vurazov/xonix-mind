@@ -1,0 +1,13 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+target/
+*.iml
+/xonix-mind-app/.mvn/
+/xonix-mind-app/logs/
+/xonix-mind-app/mvnw
+/xonix-mind-app/node_modules/
+/xonix-mind-app/src/main/resources/static/built/
+logs/
+/main.log
+/repositories/
+/video/

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<div class="row">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script>
+    var path = window.location.pathname.split("/");
+    path.pop()
+    var id = path.pop();
+    var isFinish = false;
+</script>
+
+<script>
+    $(function() {
+        function check_match() {
+            $.ajax({
+                url: '/match/' + id + '/state',
+                type: 'GET',
+                success: function (data, textStatus, jQxhr) {
+                    var d = [];
+                    var status = data.status;
+                    isFinish = (status == "Finish");
+                    $("#status").html(status);
+                    for (bot in data.bots) {
+                        d.push("name: " + data.bots[bot].name + "  url: " + data.bots[bot].srcUrl + " score:" + data.bots[bot].score + '<br/>');
+                    }
+                    if (isFinish) {
+                        $("#result").html(d.join("<br>"));
+                        var path2 = window.location.href.split("/");
+                        path2.pop();
+                        $("#replay").html('<a href=\"' + path2.join("/") + "/replay" + '\"> View match<a/>');
+                    } else {
+                        window.setTimeout(check_match, 1000);
+                    }
+                },
+                error: function (jqXhr, textStatus, errorThrown) {
+                    setTimeout(function () {
+                        window.location.replace("/ui/match/create");
+                    }, 1000)
+                }
+            });
+        }
+        check_match()
+    });
+</script>
+<div class="col-3">
+</br>
+<label for="status" class="grey-text">Status:</label>
+<div id="status" class="grey-text">
+    <i class="fa fa-percent prefix grey-text" aria-hidden="true"></i>
+</div>
+</br>
+<label for="replay" class="grey-text">Replay:</label>
+<div id="replay" class="grey-text">
+    <i class="fa fa-film prefix grey-text" aria-hidden="true"></i>
+</div>
+<br/>
+<label for="result" class="grey-text">Results:</label>
+<div id="result" class="grey-text">
+    <i class="fa fa-flag prefix grey-text" aria-hidden="true"></i>
+</div>
+</div>
+</div>
+</body>
+</html>

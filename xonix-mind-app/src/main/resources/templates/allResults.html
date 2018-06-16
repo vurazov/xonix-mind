@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<div class="row">
+    <div class="col-3">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <script>
+        $(function() {
+            function check_match() {
+                $.ajax({
+                    url: '/match/list',
+                    type: 'GET',
+                    success: function (data, textStatus, jQxhr) {
+                        var table = [];
+                        var path2 = window.location.href.split("/");
+                        path2.pop();
+                        table.push("<table>");
+                        table.push("<tr>");
+                        for (i in data.headers) {
+                            for (j in data.headers[i]) {
+                                table.push("<th>" + data.headers[i][j] + "</th>");
+                            }
+                        }
+                        table.push("</tr>");
+                        for (i in data.rows) {
+                            table.push("<tr>");
+                            for (j in data.rows[i]) {
+                                table.push("<td>" + data.rows[i][j] + "</td>");
+                            }
+                            table.push('<td> <a href=\"' + path2.join("/") + "/" + data.rows[i][0] + "/replay" + '\"> Video<a/> </td>');
+                            table.push("</tr>");
+                        }
+
+                        table.push("</table>");
+                        $("#result").html(table.join(""));
+                        window.setTimeout(check_match, 1500);
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        setTimeout(function () {
+                            window.location.replace("/ui/match/create");
+                        }, 1000)
+                    }
+                });
+            }
+            check_match();
+        });
+    </script>
+        <div id="result" class="grey-text">
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

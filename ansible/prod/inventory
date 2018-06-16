@@ -1,0 +1,8 @@
+[all:vars]
+ansible_connection=ssh
+ansible_ssh_user=*** TODO PLEASE SPECIFY VALUE ***
+ansible_ssh_pass=*** TODO PLEASE SPECIFY VALUE ***
+jenkins_admin_password=*** TODO PLEASE SPECIFY VALUE ***
+
+[server]
+10.69.8.222

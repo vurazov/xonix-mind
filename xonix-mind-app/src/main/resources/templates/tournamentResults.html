@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<div class="row">
+    <div class="col-7">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+        <script>
+            var path = window.location.href.split("/");
+            path.pop();
+            var id = path.pop();
+            $(function() {
+                function check_tournament() {
+                    $.ajax({
+                        url: '/v1/tournament/' + id + '/list',
+                        type: 'GET',
+                        success: function (data, textStatus, jQxhr) {
+                            var table = [];
+                            table.push("<table style=\"width:100%\">");
+                            table.push("<tr>");
+                            for (i in data.headers) {
+                                for (j in data.headers[i]) {
+                                    table.push("<th>" + data.headers[i][j] + "</th>");
+                                }
+                            }
+                            table.push("</tr>");
+                            for (i in data.rows) {
+                                table.push("<tr>");
+                                var date = new Date(data.rows[i][0]);
+                                var dateAndTime = date.toLocaleString().split(", ")
+                                table.push("<td>" + dateAndTime[0] + "<br>" + dateAndTime[1] + "</td>");
+                                for (j = 1; j < data.rows[i].length - 1; j++) {
+                                    if (data.rows[i][j] == '-') {
+                                        table.push("<td>" + data.rows[i][j] + "</td>");
+                                    } else {
+                                        var scores = data.rows[i][j].split(":");
+                                        var button = '<a class=\"blue-text\" href=\" /ui/match/' + scores[0] + '/log \">Fail<a/>';
+                                        if (scores.pop() == 'true') {
+                                            table.push("<td>" + scores[0] + "<br>" + scores[1] + "</td>");
+                                        } else {
+                                            table.push("<td>" + scores[0] + "<br>" + button + "</td>");
+                                        }
+                                    }
+                                }
+                                if (data.rows[i].length < 3 || data.rows[i][1] === '-' || data.rows[i][1] == null) {
+                                    table.push('<td>-</td>');
+                                } else {
+                                    table.push('<td> <a class=\"blue-text\" onclick=\"onVideoClick(' + data.rows[i].pop() + ');\">Video<a/> </td>');
+                                }
+                                table.push("</tr>");
+                            }
+
+                            table.push("</table>");
+                            $("#result").html(table.join(""));
+                            window.setTimeout(check_tournament, 1000);
+                        },
+                        error: function (jqXhr, textStatus, errorThrown) {
+                            setTimeout(function () {
+                                window.location.replace("/");
+                            }, 1000)
+                        }
+                    });
+                }
+                check_tournament();
+            });
+        </script>
+        <div id="video_pop" onclick="onPopClick()"></div>
+        <div id="result" class="grey-text">
+        </div>
+        <form id="start-form" method="post">
+            <div class="text-center grey-text">
+                <button id="start-match" class="btn btn-unique">Start new tournament match<i
+                        class="fa fa-paper-plane-o ml-1"></i></button>
+            </div>
+        </form>
+        <script>
+            function onVideoClick(id) {
+                document.getElementById("video_pop").innerHTML = "" +
+                    "<video id=\"the_Video\" controls> <source src=\"/ui/match/" + id + "/replay\" type=\"video/webm\">" +
+                    "</video>";
+                document.getElementById("video_pop").style.display="block";
+            }
+
+            function onPopClick() {
+                document.getElementById("video_pop").style.display="none";
+                document.getElementById("video_pop").innerHTML = "";
+            }
+
+            function getLog(hash) {
+                window.location.replace("/ui/match" + hash + "/log")
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#start-form").submit(function (event) {
+                    event.preventDefault();
+                    start_match();
+                });
+            });
+
+            function start_match() {
+                $.ajax({
+                    url: '/v1/tournament/startmatch',
+                    type: 'POST',
+                    data: {
+                        id: id,
+                    }
+                });
+            }
+
+        </script>
+    </div>
+</div>
+</body>
+</html>

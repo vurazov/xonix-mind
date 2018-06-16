@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="row">
+    <div class="col-7 grey-text">
+    <h2 class="text-center">Welcome to the Xonix!</h2>
+        <h3 class="text-center">What is it?</h3>
+        <p>First, our wiki: <a href="https://wiki.thumbtack.net/Customers/Bench%20Projects/Xonix/" target="_blank">Xonix-wiki</a></p>
+        <p>The general rules are quite simple.
+            At the beginning of the game the whole field is not painted
+            Your bot should paint over as much of the field as possible.
+            Moving across the field the bot leaves a trace behind itself as an infinite snake.
+            As soon as the trace closes (the beginning and the end on the boundary of the field) - the piece inside is considered
+            Collision with other bots resets the unpainted part and sends the bots to their original position.
+            The winner is the one who painted more of the cells.</p>
+        <h3 class="text-center">How to start?</h3>
+        <p>For participation in the game you need to create a bot.</p>
+
+        <p>Examples:</p>
+        <ul>
+            <li><a href="https://github.com/lineate/xonix-bot" target="_blank">Java-bot</a></li>
+            <li><a href="https://github.com/lineate/scala-bot" target="_blank">Scala-bot</a></li>
+            <li><a href="https://github.com/lineate/kotlin-bot" target="_blank">Kotlin-bot</a></li>
+        </ul>
+
+
+        <p>So, as you can see, you can use any jvm languages, but you also need to use Maven for assembling your project.</p>
+
+        <p>Important:</p>
+        <ul>
+            <li>You need to add in dependencies xonix-mind-commons. Necessary repository is specified in pom.xml in examples.</li>
+            <li>Your bot must to implements interface com.lineate.xonix.mind.model.Bot .</li>
+            <li>Each other bot must be in a separated repository.</li>
+        </ul>
+        <form action="/ui/match/create">
+            <div class="text-center">
+                <button id="create-match" class="btn btn-unique">Create match<i
+                        class="fa fa-flag ml-1"></i></button>
+            </div>
+        </form>
+        <form action="/ui/match/add">
+            <div class="text-center">
+                <button id="add-bot" class="btn btn-unique">Add bot<i
+                        class="fa fa-android ml-1"></i></button>
+            </div>
+        </form>
+        <form action="/ui/match/states">
+            <div class="text-center">
+                <button id="results" class="btn btn-unique">Results<i
+                        class="fa fa-group ml-1"></i></button>
+            </div>
+        </form>
+        <form action="/ui/tournament/create">
+            <div class="text-center">
+                <button id="tournament" class="btn btn-unique">Tournament<i
+                        class="fa fa-flag ml-1"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+</body>
+</html>

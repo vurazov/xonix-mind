@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+<div class="row">
+    <div class="col-3">
+        <form id="match-form" method="post">
+            <div class="md-form">
+                <i class="fa fa-link prefix grey-text"></i>
+                <input type="text" placeholder="Url to bot" id="url" name="url"class="form-control grey-text text-center"
+                       required="required"/>
+            </div>
+            <div class="md-form">
+                <i class="fa fa-user prefix grey-text"></i>
+                <input type="text" placeholder="Bot name" id="botName" name="botName"class="form-control grey-text text-center"
+                       required="required"/>
+            </div>
+            <div class="text-center">
+                <button id="create-match" class="btn btn-unique">Add <i
+                        class="fa fa-paper-plane-o ml-1"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    var path = window.location.pathname.split("/");
+    path.pop()
+    var id = path.pop();
+
+
+
+    $(document).ready(function () {
+        $("#match-form").submit(function (event) {
+            event.preventDefault();
+            add_bot(id);
+        });
+    });
+
+    function add_bot(id) {
+        $.ajax({
+            url: '/match/add',
+            type: 'POST',
+            data: JSON.stringify({
+                name: $('#botName').val(),
+                srcUrl: $('#url').val()
+            }),
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            success: function (data, textStatus, jQxhr) {
+                setTimeout(function () {
+                    window.location.replace("/ui/match/states");
+                }, 1000)
+            },
+            error: function (jqXhr, textStatus, errorThrown) {
+                swal(textStatus);
+            }
+        });
+    }
+</script>
+
+
+</body>
+</html>

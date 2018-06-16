@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+</head>
+<body>
+<div class="row">
+<div class="col-3">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+<script>
+    var id = window.location.pathname.split("/").pop();
+</script>
+
+
+<script>
+    $(function() {
+        function print_bots() {
+            $.ajax({
+                url: '/match/all-bots',
+                type: 'GET',
+                success: function (data, textStatus, jQxhr) {
+                    var d = [];
+                    for (i in data) {
+                      d.push('<p class=\"text-center grey-text\">' + data[i].name + '</p>');
+                    }
+                    $("#slider").html(d.join(""));
+                }
+            });
+        }
+        print_bots()
+    });
+</script>
+
+<p class="text-center grey-text">Current bots:</p>
+<div id="slider" class="grey-text"></div>
+
+
+<form id="start-form" method="post">
+    <div class="text-center grey-text">
+        <button id="start-match" class="btn btn-unique">Start <i
+                class="fa fa-paper-plane-o ml-1"></i></button>
+    </div>
+</form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#start-form").submit(function (event) {
+            event.preventDefault();
+            start_match();
+            window.location.replace("/ui/match/states");
+        });
+    });
+
+    function start_match() {
+        $.ajax({
+            url: '/match/' + id + "/start",
+            type: 'POST',
+            async: true,
+            data: {
+                debug_skip: false,
+                delay: 10
+            }
+        });
+    }
+
+</script>
+
+</div>
+</body>
+</html>

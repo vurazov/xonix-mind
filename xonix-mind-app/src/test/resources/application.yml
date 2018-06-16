@@ -1,0 +1,16 @@
+spring.data.rest.base-path: /api
+xonix:
+  default:
+    match.duration: 40
+    field.height: 20
+    field.width:  20
+    field.filled: 90
+    log.video.dir: /video
+    log.mvn.dir: /mvn-logs
+    log.repositories.dir: /repositories
+    build:
+      temp.dir: /tmp
+      git.command: git
+      mvn.command: mvn
+      ffmpeg.command: ffmpeg
+  test.user.url: https://github.com/lineate/xonix-bot

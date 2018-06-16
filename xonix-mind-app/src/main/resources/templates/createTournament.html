@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Create Tournament Xonix</title>
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.5.2/css/mdb.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+
+</head>
+
+<body>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: '/match/all-bots',
+            type: 'GET',
+            success: function (data, textStatus, jQxhr) {
+                var newitemnum = 1;
+                for (i in data) {
+                    $("#bot-multiselect").append('<option value="'+data[i].name+'">'+data[i].name+'</option>');
+                    $("#bot-multiselect").val(newitemnum);
+                    newitemnum++;
+                }
+                $("#bot-multiselect").val('default');
+                $("#bot-multiselect").selectpicker("refresh");
+            }
+        });
+        });
+</script>
+<div class="row">
+    <div class="col-3">
+        <form id="match-form" method="post">
+            <div class="md-form form-group">
+                <i class="fa fa-percent prefix grey-text" aria-hidden="true"></i>
+                <input type="number" placeholder="Fill percentage" id="percent" name="percent" class="form-control grey-text text-center"
+                       required="required"/>
+            </div>
+            <div class="md-form">
+                <i class="fa fa-clock-o prefix grey-text" aria-hidden="true"></i>
+                <input type="number" placeholder="Match duration" id="duration" name="duration" class="form-control grey-text text-center"
+                       required="required"/>
+            </div>
+            <div id="result" class="grey-text">
+            </div>
+            <!-- <select id="bot-multiselect" multiple="multiple"> -->
+            </select>
+            <div class="text-center">
+                <button id="create-match" class="btn btn-unique">Create tournament<i
+                        class="fa fa-paper-plane-o ml-1"></i></button>
+            </div>
+        </form>
+        <div class="text-center">
+            <button id="update-bot-list" class="btn btn-unique">Update bot lists<i
+                    class="fa fa-android ml-1"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#update-bot-list").click(function () {
+        $.ajax({
+            url: '/match/all-bots',
+            type: 'GET',
+            success: function (data, textStatus, jQxhr) {
+                var bots = [];
+                bots.push('<select id=\"bot-multiselect\" multiple=\"multiple\">');
+                for (i in data) {
+                    bots.push('<option value="'+data[i].id+'">'+data[i].name+'</option>');
+                }
+                bots.push('</select>');
+                $("#result").html(bots.join(""));
+            }
+        });
+
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#match-form").submit(function (event) {
+            event.preventDefault();
+            create_tournament();
+        });
+    });
+
+    function create_tournament() {
+        $.ajax({
+            url: '/v1/tournament/create/',
+            type: 'POST',
+            data: JSON.stringify({
+                id: '',
+                percent: $('#percent').val(),
+                duration: $('#duration').val(),
+                bots: $('#bot-multiselect').val()
+            }),
+            contentType:"application/json; charset=utf-8",
+            dataType:"json",
+            success: function (data, textStatus, jQxhr) {
+                setTimeout(function () {
+                    window.location.replace("/ui/tournament/" + data.id + '/state');
+                }, 1000)
+            }
+        });
+    }
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+<!-- NOTE: MAKE SURE THAT settings.xml IS NOT WORLD READABLE! -->
+<settings>
+  <servers>
+    <server>
+      <id>github</id>
+      <username>lineate</username>
+      <password>8rxHKLXq</password>
+    </server>
+  </servers>
+</settings>

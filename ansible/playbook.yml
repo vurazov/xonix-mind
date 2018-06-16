@@ -1,0 +1,14 @@
+- hosts: all
+  vars:
+    springboot_application_name: thumbtack-xonix-mind
+    springboot_src: /home/ev/prj/thumbtack-xonix-mind/xonix-mind-app/target/xonix-mind-app-1.3.0.jar
+    springboot_src_file: /home/ev/prj/thumbtack-xonix-mind/xonix-mind-app/target/xonix-mind-app-1.3.0.jar
+    docker_users:
+      - jenkins
+      - vagrant
+      - root
+  roles:
+    - role: ansible-role-docker
+    - role: oracle-java
+    - role: ansible-springboot
+    - role: jenkins
